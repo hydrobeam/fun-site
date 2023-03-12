@@ -1,0 +1,119 @@
+:root {
+    --link-trans-time: 350ms;
+    --bg-color: aliceblue;
+    --text-color: black;
+    --border-color: black;
+}
+
+/* p { */
+/*     color: darkolivegreen; */
+/*     width: 50px; */
+/*     margin: 0 auto; */
+/*     border: 30px solid black; */
+/* } */
+
+html {
+    font-size: 12px;
+    font-family: sans-serif;
+}
+
+body {
+    width: 500px;
+    margin: 0 auto;
+    background-color: var(--bg-color);
+    padding: 0 20px 20px 20px;
+    border: 5px solid var(--border-color);
+}
+
+img {
+    display: block;
+    margin: 0 auto;
+    width: 300px;
+    max-width: inherit;
+    /* border: solid 2px var(--border-color) ; */
+}
+img.switch {
+    cursor: pointer;
+}
+
+#tooltip {
+    display: grid;
+    /* max-width: 300px; */
+    position: absolute;
+    left: 0;
+    top: 0;
+    background: var(--bg-color);
+    color: var(--text-color);
+    /* padding: 5px; */
+    border-radius: 4px;
+    /* border: solid 2px grey; */
+    /* border-radius: 4px; */
+    box-shadow: 0px 0px 0.3em grey;
+    /* transition: all var(--link-trans-time) linear; */
+    transition-property: opacity;
+    transition-duration: var(--link-trans-time);
+    transition-timing-function: ease-in;
+    opacity: 0;
+
+    /* grid stuff */
+    /* fr for second column in case image isn't present */
+    grid-template-columns: 225px 1fr;
+    grid-template-rows: 14.5em 1.5em;
+    /* grid-gap: 1.3em; */
+    gap: 1em;
+}
+
+#tooltip-text {
+    /* padding vs margin because sometimes margin cuts off text and padding doesnt??? */
+    padding: 1.0em;
+    grid-column: 1/2;
+    grid-row: 1/2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+    position: relative;
+/* https://stackoverflow.com/questions/33058004/applying-an-ellipsis-to-multiline-text */
+    -webkit-line-clamp: 9;
+    -webkit-box-orient: vertical;
+    display: -webkit-box;
+}
+
+
+#tooltip-thumb {
+    /* background: black; */
+    display: block;
+    border-left: solid 0.5px grey;
+    grid-column: 2/3;
+    grid-row: 1/3;
+    /* max-width: 130px; */
+    /* max-height: 10em; */
+    /* max-height: auto; */
+    max-height: 100% ;
+    max-width: 100%;
+    /* width: 100%; */
+    height: 100%;
+    width: 200px;
+    object-fit: cover;
+}
+
+
+/* hide images which aren't there */
+#tooltip-thumb[src=""] {
+   display: none;
+}
+
+#tooltip.animBegin {
+  opacity: 1;
+}
+
+#tooltip.animEnd {
+  opacity: 0;
+}
+
+#arrow {
+  position: absolute;
+  /* background: #222; */
+  width: 80px;
+  height: 8px;
+  transform: rotate(45deg);
+}
