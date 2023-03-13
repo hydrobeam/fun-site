@@ -138,7 +138,7 @@ async function getWikiExtract(domElement) {
     "formatversion": 2,
     "redirects": true,
     "exintro": true,
-    "exchars": 350,
+    "exchars": 400,
     // "explaintext": true,
     // "exsectionformat": "plain",
     "piprop": "thumbnail",
