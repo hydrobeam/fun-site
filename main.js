@@ -165,9 +165,9 @@ async function getWikiExtract(domElement) {
   // JANK
   // idk how the rswiki does it, they get plaintext but their thing has formatting... probably some preprocessing..
   // in plaintext this isn't a problem since it ignores all newlines
-  const extract = objContent["extract"].replace('\n</p><p>', ' ');
+  const extract = objContent["extract"];
   if (extract) {
-    tooltipText.innerHTML = extract;
+    tooltipText.innerHTML = extract.replace('\n</p><p>', ' ');
     let thumbnail = objContent["thumbnail"];
     if (thumbnail) {
       let imgSource = thumbnail["source"];
@@ -178,7 +178,7 @@ async function getWikiExtract(domElement) {
       tooltipThumb.setAttribute('src', '');
     }
   } else {
-    tooltipText.innerHTML = `Query "<b>${link}</b>" not found.`;
+    tooltipText.innerHTML = `<p>Query "<b>${link}</b>" not found.</p>`;
     tooltipThumb.setAttribute('src', '');
   }
 
