@@ -6,17 +6,6 @@ import {
   arrow,
 } from 'https:cdn.jsdelivr.net/npm/@floating-ui/dom@1.2.3/+esm';
 
-const myImage = document.querySelector("img");
-
-myImage.onclick = () => {
-  const srcc = myImage.getAttribute("src");
-  if (srcc === "aamgi.jpg") {
-    myImage.setAttribute("src", "blush.png");
-  } else {
-    myImage.setAttribute("src", "aamgi.jpg");
-  }
-};
-
 const linkTransTime = parseInt(getComputedStyle(document.body).getPropertyValue("--link-trans-time"));
 
 let tooltip = document.querySelector('#tooltip');
