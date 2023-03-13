@@ -73,11 +73,12 @@ function hideTooltip() {
 // there's some extra code for to check if the tooltip/link is being hovered, so that the user can click and view the popup.
 // add a class to represent an animation to the tooltip (toolttip-begin)
 //
+
+let timer = null;
 wikiLinks.forEach(function (elem) {
-  let timer = null;
   // inspired by (taken from..?)
   // https://stackoverflow.com/questions/6231052/how-to-have-a-mouseover-event-fire-only-if-the-mouse-is-hovered-over-an-element
-  elem.addEventListener('mouseover', (actionEvent) => {
+  elem.addEventListener('pointerover', (actionEvent) => {
     tooltip.classList.add('link-hover');
     timer = setTimeout(async () => {
       tooltip.style.display = 'grid';
@@ -86,7 +87,7 @@ wikiLinks.forEach(function (elem) {
     }, linkTransTime)
   });
 
-  elem.addEventListener('mouseleave', () => {
+  elem.addEventListener('pointerleave', () => {
     tooltip.classList.remove('link-hover');
     clearTimeout(timer)
     setTimeout(() => {
@@ -110,19 +111,18 @@ wikiLinks.forEach(function (elem) {
       hideTooltip();
     }, linkTransTime);
   });
+})
 
-  tooltip.addEventListener('mouseover', () => {
-    tooltip.classList.add('tooltip-hover');
-  })
+tooltip.addEventListener('pointerover', () => {
+  tooltip.classList.add('tooltip-hover');
+})
 
-  tooltip.addEventListener('mouseleave', () => {
-    tooltip.classList.remove('tooltip-hover');
-    // add delay on fadeout to see if  user is hovering tooltip/link
-    setTimeout(() => {
-      hideTooltip();
-    }, linkTransTime);
-  })
-
+tooltip.addEventListener('pointerleave', () => {
+  tooltip.classList.remove('tooltip-hover');
+  // add delay on fadeout to see if  user is hovering tooltip/link
+  setTimeout(() => {
+    hideTooltip();
+  }, linkTransTime);
 })
 
 async function getWikiExtract(domElement) {
@@ -153,11 +153,11 @@ async function getWikiExtract(domElement) {
 
   let response = await fetch("https://runescape.wiki/api.php?" + params);
   let responseJson = await response.json();
-  console.log(responseJson);
+  // console.log(responseJson);
   const objContent = responseJson["query"]["pages"][0];
 
   domElement.target.href = objContent["fullurl"];
-  console.log(objContent["extract"]);
+  // console.log(objContent["extract"]);
   // FIXME: find better solution???
   // replace breaking newline, just one should be enough... i guess
   // do this because newlines aren't consistent with the rest of the line heights and introduce a weird
