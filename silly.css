@@ -54,7 +54,7 @@ header > .site-links {
 
     /* ensure that top-right headings don't get dunked on */
     body {
-        grid-template-rows: 20% 70% 10%;
+        grid-template-rows: 30% 60% 10%;
     }
 }
 
