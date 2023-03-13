@@ -37,19 +37,14 @@ img.switch {
 }
 
 #tooltip {
-    display: grid;
-    /* max-width: 300px; */
+    display: none;
     position: absolute;
     left: 0;
     top: 0;
     background: var(--bg-color);
     color: var(--text-color);
-    /* padding: 5px; */
     border-radius: 4px;
-    /* border: solid 2px grey; */
-    /* border-radius: 4px; */
     box-shadow: 0px 0px 0.3em grey;
-    /* transition: all var(--link-trans-time) linear; */
     transition-property: opacity;
     transition-duration: var(--link-trans-time);
     transition-timing-function: ease-in;
@@ -59,7 +54,6 @@ img.switch {
     /* fr for second column in case image isn't present */
     grid-template-columns: 225px 1fr;
     grid-template-rows: 14.5em 1.5em;
-    /* grid-gap: 1.3em; */
     gap: 1em;
 }
 
