@@ -66,11 +66,12 @@ img.switch {
 #tooltip-text {
     /* padding vs margin because sometimes margin cuts off text and padding doesnt??? */
     padding: 1.0em;
+    /* this is the line height value that prevents vertical clipping... */
+    line-height: 1.4em;
     grid-column: 1/2;
     grid-row: 1/2;
     overflow: hidden;
     text-overflow: ellipsis;
-    display: block;
     position: relative;
 /* https://stackoverflow.com/questions/33058004/applying-an-ellipsis-to-multiline-text */
     -webkit-line-clamp: 9;
