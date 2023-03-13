@@ -65,12 +65,26 @@ img.switch {
     grid-column: 1/2;
     grid-row: 1/2;
     overflow: hidden;
-    text-overflow: ellipsis;
     position: relative;
-/* https://stackoverflow.com/questions/33058004/applying-an-ellipsis-to-multiline-text */
+    /* https://stackoverflow.com/questions/33058004/applying-an-ellipsis-to-multiline-text */
     -webkit-line-clamp: 9;
     -webkit-box-orient: vertical;
     display: -webkit-box;
+}
+
+/* applies a fadeout effect for the last few words
+ *
+ripped straight from the wiki */
+#tooltip-text::after {
+    right: 0;
+    background-image: linear-gradient(to right,rgba(255,255,255,0),var(--bg-color) 50%);
+    content: ' ';
+    position: absolute;
+    bottom: 0;
+    width: 40%;
+    height: 1.4em;
+    background-color: transparent;
+    pointer-events: none;
 }
 
 
