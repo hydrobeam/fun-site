@@ -8,6 +8,7 @@
 
 .wiki-link {
     user-select: none;
+    width: fit-content;
 }
 
 .wiki-link:hover {
@@ -45,7 +46,9 @@ body {
 
 .main-content {
     grid-area: main;
-    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 header {
