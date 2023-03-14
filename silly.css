@@ -10,6 +10,11 @@
     user-select: none;
 }
 
+.wiki-link:hover {
+    transition: color 0.5s ease-in-out;
+    color:mediumpurple;
+}
+
 input {
   border: solid 2px black;
   border-radius: 10px;
