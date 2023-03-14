@@ -31,8 +31,8 @@ class BaseWikiAPICall {
 
   extractQueryUrl(responseObject){};
 
-  // returns URLSearchParams object
-  // takes  string
+  // fills the needed attrs with what they're supposed to be
+  // takes string
   /* accepts string */
   async generateJsonResponse(query) {
     let response = await fetch(this.generateQueryUrl(query));
