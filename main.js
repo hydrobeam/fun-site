@@ -91,7 +91,7 @@ class RunescapeAPICall extends BaseWikiAPICall {
       "formatversion": 2,
       "redirects": true,
       "exintro": true,
-      "exchars": 400,
+      "exchars": 425,
       // "explaintext": true,
       // "exsectionformat": "plain",
       "piprop": "thumbnail",
