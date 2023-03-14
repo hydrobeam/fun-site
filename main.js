@@ -58,9 +58,9 @@ class BaseWikiAPICall {
   }
 }
 
-class RunescapeAPICall extends BaseWikiAPICall {
-  constructor() {
-    super("https://runescape.wiki/api.php?");
+class ClassicMediaWikiAPICall extends BaseWikiAPICall {
+  constructor(url) {
+    super(url);
   }
 
   // returns an object
@@ -102,9 +102,22 @@ class RunescapeAPICall extends BaseWikiAPICall {
       "smaxage": 300,
       "maxage": 300,
       "uselang": "content",
+      "origin": "*",
     });
 
     return this.url  + params;
+  }
+}
+class RunescapeAPICall extends ClassicMediaWikiAPICall {
+  constructor() {
+    super("https://runescape.wiki/api.php?");
+  }
+}
+
+
+class UncyclopediaAPICall extends ClassicMediaWikiAPICall {
+  constructor() {
+    super("https://en.uncyclopedia.co/w/api.php?");
   }
 }
 
@@ -167,6 +180,7 @@ tooltip.addEventListener('transitionend', () => {
 changeElement.addEventListener('input', (e) => {
   wikiLinks[0].innerHTML = e.target.value;
   wikiLinks[1].innerHTML = e.target.value;
+  wikiLinks[2].innerHTML = e.target.value;
 })
 
 function showTooltip() {
@@ -259,7 +273,8 @@ tooltip.addEventListener('pointerleave', () => {
 
 const wikiQueryMap = {
   "runescape": new RunescapeAPICall(),
-  "wikipedia": new WikipediaAPICall()
+  "wikipedia": new WikipediaAPICall(),
+  "uncyclopedia": new UncyclopediaAPICall(),
 };
 
 async function getWikiExtract(domElement) {
