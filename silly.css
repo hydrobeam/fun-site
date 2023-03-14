@@ -5,6 +5,11 @@
     --border-color: black;
 }
 
+
+.wiki-link {
+    user-select: none;
+}
+
 html {
     font-size: 1.4rem;
     font-family: sans-serif;
