@@ -38,10 +38,30 @@ function showTooltip() {
   tooltip.classList.add('animBegin');
 }
 
+// prevElement is set to the target element of the event when displayed
+// when it is succesffuly hidden, we set it to null so that an animation can play
+//
+// we bother with this so enable it so that if you mouse off the tooltip, and back
+// onto the previous element you were on, the tooltip remains
+//
+// however, if you were to mouse on to /another/ tooltip, the tooltip would disappear
+// and reanimate in the other location
 function hideTooltip() {
   // console.log(!(tooltip.classList.contains('tooltip-hover') || tooltip.classList.contains('link-hover')));
-  if (!(tooltip.classList.contains('tooltip-hover') || tooltip.classList.contains('link-hover')))
+  if (!(tooltipHover
+        // check for link hover to not remove the element
+        // if a link is being overed.
+        // if it's not the same as the previous element, the link
+        // will still fadeaway since we remove animEnd unconditionally
+        //
+        // if it's the same as the previou element, nothing changes. as desired.
+        // going back and hovering the link u were hovering shouldn't influence the tooltip
+        // we re-add the link-hover class before the timer runs out on the pointerleave
+        // event, so it gets caught here.
+    || linkHover
+  ))
     if (tooltip.classList.contains('animBegin')) {
+      prevElement = null;
       tooltip.classList.remove('animBegin');
       tooltip.classList.add('animEnd');
     }
@@ -72,20 +92,31 @@ function hideTooltip() {
 //
 
 let timer = null;
+let prevElement = null;
+let linkHover = false;
+let tooltipHover = false;
 wikiLinks.forEach(function (elem) {
   // inspired by (taken from..?)
   // https://stackoverflow.com/questions/6231052/how-to-have-a-mouseover-event-fire-only-if-the-mouse-is-hovered-over-an-element
   elem.addEventListener('pointerover', (actionEvent) => {
-    tooltip.classList.add('link-hover');
-    timer = setTimeout(async () => {
-      tooltip.style.display = 'grid';
-      await getWikiExtract(actionEvent);
-      showTooltip();
-    }, linkTransTime)
+    linkHover = true;
+    if (actionEvent.target != prevElement) {
+      // have remove all animation instances to induce an animate off effect
+      // as opposed to having the tooltip teleport
+      tooltip.classList.remove('animBegin');
+      // animEnd cause sometimes it can get glitchy out here
+      tooltip.classList.remove('animEnd');
+      timer = setTimeout(async () => {
+        tooltip.style.display = 'grid';
+        await getWikiExtract(actionEvent);
+        prevElement = actionEvent.target;
+        showTooltip();
+      }, linkTransTime)
+    }
   });
 
   elem.addEventListener('pointerleave', () => {
-    tooltip.classList.remove('link-hover');
+    linkHover = false;
     clearTimeout(timer)
     setTimeout(() => {
       hideTooltip();
@@ -93,7 +124,7 @@ wikiLinks.forEach(function (elem) {
   });
 
   elem.addEventListener('focus', (actionEvent) => {
-    tooltip.classList.add('link-hover');
+    linkHover = true;
     timer = setTimeout(async () => {
       tooltip.style.display = 'grid';
       await getWikiExtract(actionEvent);
@@ -102,7 +133,7 @@ wikiLinks.forEach(function (elem) {
   });
 
   elem.addEventListener('blur', () => {
-    tooltip.classList.remove('link-hover');
+    linkHover = false;
     clearTimeout(timer)
     setTimeout(() => {
       hideTooltip();
@@ -111,11 +142,11 @@ wikiLinks.forEach(function (elem) {
 })
 
 tooltip.addEventListener('pointerover', () => {
-  tooltip.classList.add('tooltip-hover');
+  tooltipHover = true;
 })
 
 tooltip.addEventListener('pointerleave', () => {
-  tooltip.classList.remove('tooltip-hover');
+  tooltipHover = false;
   // add delay on fadeout to see if  user is hovering tooltip/link
   setTimeout(() => {
     hideTooltip();
@@ -130,6 +161,8 @@ const wikiQueryMap = {
 
 async function getWikiExtract(domElement) {
   const link = domElement.target.innerHTML;
+  // set src to blank to reset previous image in case it doens't laod in time
+  tooltipThumb.setAttribute('src', ' ');
 
   // REVIEW: consider using revisions to cache dom changes.
   // for now, just TODO: aggressively cache.
