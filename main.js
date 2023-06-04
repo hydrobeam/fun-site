@@ -3,7 +3,6 @@ import {
   autoPlacement,
   shift,
   offset,
-  arrow,
 } from 'https:cdn.jsdelivr.net/npm/@floating-ui/dom@1.2.3/+esm';
 
 import {
@@ -17,9 +16,10 @@ const linkTransTime = parseInt(getComputedStyle(document.body).getPropertyValue(
 let tooltip = document.querySelector('#tooltip');
 let tooltipText = document.querySelector('#tooltip-text');
 let tooltipThumb = document.querySelector('#tooltip-thumb');
-let arrowElement = document.querySelector('#arrow');
 let wikiLinks = document.querySelectorAll('.wiki-link');
 let changeElement = document.getElementById('update-wiki-link');
+
+const linkWaitTime = 700;
 
 tooltip.addEventListener('transitionend', () => {
   if (tooltip.classList.contains('animEnd')) {
@@ -49,22 +49,28 @@ function showTooltip() {
 function hideTooltip() {
   // console.log(!(tooltip.classList.contains('tooltip-hover') || tooltip.classList.contains('link-hover')));
   if (!(tooltipHover
-        // check for link hover to not remove the element
-        // if a link is being overed.
-        // if it's not the same as the previous element, the link
-        // will still fadeaway since we remove animEnd unconditionally
-        //
-        // if it's the same as the previou element, nothing changes. as desired.
-        // going back and hovering the link u were hovering shouldn't influence the tooltip
-        // we re-add the link-hover class before the timer runs out on the pointerleave
-        // event, so it gets caught here.
+    // check for link hover to not remove the element
+    // if a link is being overed.
+    // if it's not the same as the previous element, the link
+    // will still fadeaway since we remove animEnd unconditionally
+    //
+    // if it's the same as the previou element, nothing changes. as desired.
+    // going back and hovering the link u were hovering shouldn't influence the tooltip
+    // we re-add the link-hover class before the timer runs out on the pointerleave
+    // event, so it gets caught here.
     || linkHover
-  ))
+  )) {
     if (tooltip.classList.contains('animBegin')) {
+      console.log("setting prevElement");
       prevElement = null;
       tooltip.classList.remove('animBegin');
       tooltip.classList.add('animEnd');
     }
+
+  }
+  // if (tooltip.classList.contains('animEnd')) {
+  //   tooltip.classList.remove('animEnd');
+  // }
 }
 
 // uses a timeoout do induce a delay event. helps potentially prevents
@@ -106,9 +112,16 @@ wikiLinks.forEach(function (elem) {
       tooltip.classList.remove('animBegin');
       // animEnd cause sometimes it can get glitchy out here
       tooltip.classList.remove('animEnd');
+
+
       timer = setTimeout(async () => {
+        let queryWiki = await getWikiExtract(actionEvent);
         tooltip.style.display = 'grid';
-        await getWikiExtract(actionEvent);
+        moveTooltip(actionEvent);
+        tooltip.href = queryWiki.queryUrl;
+        tooltipText.innerHTML = queryWiki.summaryHTML ?? `<p>Query "<b>${link}</b>" not found.</p>`;
+        tooltipThumb.setAttribute('src', queryWiki.thumbnailSrc);
+
         prevElement = actionEvent.target;
         showTooltip();
       }, linkTransTime)
@@ -129,7 +142,7 @@ wikiLinks.forEach(function (elem) {
       tooltip.style.display = 'grid';
       await getWikiExtract(actionEvent);
       showTooltip();
-    }, linkTransTime)
+    }, linkWaitTime)
   });
 
   elem.addEventListener('blur', () => {
@@ -172,38 +185,22 @@ async function getWikiExtract(domElement) {
 
   //
   await queryWiki.generateJsonResponse(link);
-  domElement.target.href = queryWiki.queryUrl;
-  tooltipText.innerHTML = queryWiki.summaryHTML ?? `<p>Query "<b>${link}</b>" not found.</p>`;
-  tooltipThumb.setAttribute('src', queryWiki.thumbnailSrc);
+  return queryWiki;
+
+}
 
 
+function moveTooltip(domElement) {
   computePosition(domElement.target, tooltip, {
     middleware: [shift({ padding: 5 }), autoPlacement(),
     offset(6),
-    arrow({ element: arrowElement })
     ]
-  }).then(({ x, y, placement, middlewareData }) => {
+  }).then(({ x, y }) => {
 
     Object.assign(tooltip.style, {
       left: `${x}px`,
       top: `${y}px`,
     });
-
-    const { x: arrowX, y: arrowY } = middlewareData.arrow;
-
-    const staticSide = {
-      top: 'bottom',
-      right: 'left',
-      bottom: 'top',
-      left: 'right',
-    }[placement.split('-')[0]];
-
-    Object.assign(arrowElement.style, {
-      left: arrowX != null ? `${arrowX}px` : '',
-      top: arrowY != null ? `${arrowY}px` : '',
-      right: '',
-      bottom: '',
-      [staticSide]: '-4px',
-    });
   });
+
 }

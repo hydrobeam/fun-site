@@ -7,6 +7,7 @@
 
 
 .wiki-link {
+   -webkit-user-select: none; /* Safari */
     user-select: none;
     width: fit-content;
 }
@@ -30,7 +31,8 @@ html {
 }
 
 body {
-    height: 100svh;
+    /* 1.75 since a vertical scrollbar sometiems appears */
+    height: calc(100svh - 1.75svh);
     display: grid;
     grid-template-columns: 10% 80% 10%;
     grid-template-rows: 10% 80% 10%;
